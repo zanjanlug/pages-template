@@ -4,6 +4,7 @@ from datetime import datetime
 import markdown
 from jinja2 import Environment, FileSystemLoader
 import re
+import jdatetime
 
 # --- Configuration ---
 CONTENT_PATH = 'content'
@@ -14,6 +15,26 @@ RESOURCES_PATH = 'content/resources'
 RESOURCES_OUT = 'resources'
 
 # --- Helper Functions ---
+
+def to_jalali_filter(gregorian_date):
+    """A Jinja2 filter to convert Gregorian datetime object to a Jalali date string."""
+
+    # لیست نام ماه‌های فارسی
+    j_months = [
+        "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
+        "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
+    ]
+    
+    try:
+        datetime_object = datetime.fromisoformat(gregorian_date)
+        jalali_date = jdatetime.date.fromgregorian(date=datetime_object)
+        day = jalali_date.day
+        month_name = j_months[jalali_date.month - 1]
+        year = jalali_date.year
+        return f"{day} {month_name} {year}"
+    except Exception as e:
+        # در صورت بروز خطا، تاریخ میلادی را به عنوان جایگزین برگردان
+        return gregorian_date
 
 def clean_and_create_output_dir():
     """Removes the old output directory and creates a new one."""
@@ -176,15 +197,25 @@ def main():
     # 1. Setup environment
     clean_and_create_output_dir()
     env = Environment(loader=FileSystemLoader(TEMPLATE_PATH))
+    env.filters['jalali'] = to_jalali_filter  # <--- این خط را اضافه کنید
 
     # 2. Load all content
+    # ... بقیه کد بدون تغییر ...    # 2. Load all content
     data = {
         'events': load_content('events'),
         'people': load_content('people'),
         'projects': load_content('projects'),
         'pages': load_content('pages'),
         # You can add global site variables here
-        'site_title': "زنجان‌لاگ"
+        'site_title': "زنجان‌لاگ",
+                # Add social media links
+        'social_links': [
+            {'name': 'تلگرام', 'url': 'https://t.me/zanjan_lug'},
+            {'name': 'وبسایت', 'url': 'https://zanjanlug.ir'},
+            # Add other links as needed
+            # {'name': 'لینکدین', 'url': 'https://linkedin.com/yourusername'},
+            # {'name': 'گیت‌هاب', 'url': 'https://github.com/yourusername'},
+        ]
     }
 
     # 3. Render all pages
