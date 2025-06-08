@@ -1,0 +1,36 @@
+{% extends "base.html" %} {% block title %}{{ item.title }} | {{ site.site_title
+}}{% endblock %} {% block content %}
+<article class="detail-page">
+    <h2>{{ item.title }}</h2>
+    <p>
+        <strong>تاریخ:</strong> {{ item.date }} | <strong>وضعیت:</strong> {{
+        item.status }}
+    </p>
+
+    {% if item.presenter_details %}
+    <p>
+        <strong>ارائه‌دهندگان:</strong>
+        {% for p in item.presenter_details %}
+        <a href="/people/{{ p.slug }}.html">{{ p.name }}</a>{% if not loop.last
+        %}, {% endif %} {% endfor %}
+    </p>
+    {% endif %}
+
+    <div class="content">{{ item.html|safe }}</div>
+
+    {% if item.resources %}
+    <div class="resources">
+        <h3>فایل‌های ضمیمه:</h3>
+        <ul>
+            {% if item.resources.video %}
+            <li><a href="{{ item.resources.video }}">ویدیوی جلسه</a></li>
+            {% endif %} {% if item.resources.slides %}
+            <li><a href="{{ item.resources.slides }}">اسلایدها</a></li>
+            {% endif %} {% if item.resources.gallery %}
+            <li><a href="{{ item.resources.gallery }}">گالری تصاویر</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+</article>
+{% endblock %}

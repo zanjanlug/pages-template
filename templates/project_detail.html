@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block title %}{{ item.title }} | {{ site.site_title
+}}{% endblock %} {% block content %}
+<article class="detail-page">
+    <h2>{{ item.title }}</h2>
+
+    {% if item.github %}
+    <p>
+        <strong>مخزن گیت‌هاب:</strong>
+        <a href="{{ item.github }}">{{ item.github }}</a>
+    </p>
+    {% endif %}
+
+    <div class="content">{{ item.html|safe }}</div>
+</article>
+{% endblock %}

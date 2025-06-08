@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% block title %}{{ item.name }} | {{ site.site_title
+}}{% endblock %} {% block content %}
+<article class="detail-page person-page">
+    {% if item.photo %}<img
+        src="{{ item.photo }}"
+        alt="{{ item.name }}"
+        class="avatar"
+    />{% endif %}
+    <h2>{{ item.name }}</h2>
+
+    {% if item.bio %}
+    <p>{{ item.bio }}</p>
+    {% endif %}
+
+    <div class="content">{{ item.html|safe }}</div>
+
+    {% if item.links %}
+    <div class="links">
+        <h3>لینک‌ها:</h3>
+        <ul>
+            {% if item.links.website %}
+            <li><a href="{{ item.links.website }}">وب‌سایت</a></li>
+            {% endif %} {% if item.links.github %}
+            <li><a href="{{ item.links.github }}">گیت‌هاب</a></li>
+            {% endif %} {% if item.links.linkedin %}
+            <li><a href="{{ item.links.linkedin }}">لینکدین</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+</article>
+{% endblock %}
