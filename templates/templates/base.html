@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% block title %}{{ site.site_title }}{% endblock %}</title>
+        <link rel="stylesheet" href="/static/css/style.css" />
+    </head>
+    <body>
+        <header>
+            <div class="header-container">
+                <h1><a href="/">{{ site.site_title }}</a></h1>
+                <nav>
+                    <a href="/events/">رویدادها</a>
+                    <a href="/people/">افراد</a>
+                    <a href="/projects/">پروژه‌ها</a>
+                    <a href="/about.html">درباره ما</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>{% block content %}{% endblock %}</main>
+
+        <footer>
+            <div class="footer-container">
+                <p>ساخته شده با پایتون و عشق ❤️ در زنجان</p>
+            </div>
+        </footer>
+    </body>
+</html>

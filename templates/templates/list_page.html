@@ -1,0 +1,18 @@
+{% extends "base.html" %} {% block title %}{{ title }} | {{ site.site_title }}{%
+endblock %} {% block content %}
+<h2>{{ title }}</h2>
+<ul class="item-list">
+    {% for item in items %}
+    <li>
+        <a href="/{{ content_type }}/{{ item.slug }}.html">
+            {{ item.title or item.name }}
+        </a>
+        {% if item.date %}
+        <span class="date"> - {{ item.date }}</span>
+        {% endif %}
+    </li>
+    {% else %}
+    <li>موردی برای نمایش وجود ندارد.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
