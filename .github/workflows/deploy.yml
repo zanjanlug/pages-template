@@ -1,0 +1,59 @@
+# نام این گردش کار (Workflow)
+name: Deploy to GitHub Pages
+
+# تعریف تریگر: این گردش کار چه زمانی اجرا شود؟
+# در اینجا، هر زمان که کدی به شاخه main پوش شود
+on:
+  push:
+    branches:
+      - main # یا master اگر از آن استفاده می‌کنید
+
+# کارهایی که باید انجام شوند
+jobs:
+  # کار اول: ساختن سایت استاتیک
+  build:
+    runs-on: ubuntu-latest # روی یک ماشین مجازی اوبونتو اجرا شود
+    steps:
+      # مرحله 1: کد مخزن را دانلود می‌کند
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # مرحله 2: پایتون را نصب و آماده می‌کند
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10" # می‌توانید نسخه دلخواه خود را تعیین کنید
+
+      # مرحله 3: پکیج‌های پایتون را از روی فایل نیازمندی‌ها نصب می‌کند
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # مرحله 4: اسکریپت ما را برای ساخت سایت اجرا می‌کند
+      - name: Build the static site
+        run: python generate.py
+
+      # مرحله 5: پوشه خروجی (output) را به عنوان یک آرتیفکت برای کار بعدی آپلود می‌کند
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./output # مسیر پوشه‌ای که باید آپلود شود
+
+  # کار دوم: استقرار سایت
+  deploy:
+    needs: build # این کار فقط بعد از موفقیت‌آمیز بودن کار build اجرا می‌شود
+
+    # مجوزهای لازم برای استقرار در GitHub Pages
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }} # آدرس سایت را در خروجی اکشن نمایش می‌دهد
+
+    runs-on: ubuntu-latest
+    steps:
+      # مرحله 1: آرتیفکت آپلود شده در کار build را گرفته و در GitHub Pages مستقر می‌کند
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
